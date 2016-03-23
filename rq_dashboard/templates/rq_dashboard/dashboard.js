@@ -60,6 +60,7 @@ var api = {
         api.getQueues(function(queues) {
             var html = '';
             var fqEl;
+            var fiqEl;
 
             $tbody.empty();
 
@@ -67,18 +68,26 @@ var api = {
                 $.each(queues, function(i, queue) {
                     var el = template({d: queue}, {variable: 'd'});
 
-                    // Special markup for the failed queue
-                    if (queue.name === 'failed' && queue.count > 0) {
+                    // Special markup for the failed and finished queue
+                    if (queue.name === 'failed') {
                         fqEl = el;
+                        return;
+                    }
+
+                    if (queue.name === 'finished') {
+                        fiqEl = el;
                         return;
                     }
 
                     html += el;
                 });
 
-                // Append the failed queue at the end, since it's a special queue
+                // Append the failed and finished queue at the end, since it's a special queue
                 if (fqEl !== undefined) {
                     html += fqEl;
+                }
+                if (fiqEl !== undefined) {
+                    html += fiqEl;
                 }
 
                 $tbody.append(html);

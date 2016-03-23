@@ -97,7 +97,7 @@ def serialize_job(job):
         ended_at=serialize_date(job.ended_at),
         origin=job.origin,
         result=job._result,
-        exc_info=str(job.exc_info),
+        exc_info=str(job.exc_info) if job.exc_info is not None else job.exc_info,
         description=job.description)
 
 
@@ -239,7 +239,8 @@ def list_workers():
         dict(
             name=worker.name,
             queues=serialize_queue_names(worker),
-            state=str(worker.get_state())
+            state=str(worker.get_state()),
+            job=worker.get_current_job().get_call_string() if worker.get_current_job() is not None else ' '
         )
         for worker in Worker.all()
     ]
